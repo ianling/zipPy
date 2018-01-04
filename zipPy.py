@@ -65,7 +65,7 @@ for url in url_list:
             attempt_number = 1
             while downloading:
                 print 'Downloading: %s (attempt #%i)' % (filename, attempt_number)
-		try:
+                try:
                     file_download = requests.get(download_url, stream=True, cookies=cookies)
                     path = '%s%s' % (output_dir, filename)
                     with open(path, 'wb') as f:
