@@ -37,7 +37,7 @@ for url in url_list:
     try:
         landing_page = requests.get(url)
     except:
-        print 'Skipping invalid URL: %s' % (url)
+        print 'Skipping invalid URL: %s' % (repr(url))
         continue
     cookies = landing_page.cookies
     url_info = match('http://(\w+)\.zippyshare\.com/v/(\w+)/file.html', url).groups()
