@@ -3,6 +3,11 @@ Zippyshare download script, written in Python.
 
 Takes a list of Zippyshare.com URLs, either from a file or on the command line, and downloads them to the specified output directory (default: ./).
 
+# Requirements
+* Python 2
+  * clint
+  * requests
+
 # Usage
     $ python zipPy.py -h
     Usage: zipPy.py [options] [url1] [url2] ...
