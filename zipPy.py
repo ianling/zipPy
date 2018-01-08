@@ -1,3 +1,6 @@
+#!/usr/bin/python
+VERSION = '1.1'
+
 import requests
 import sys
 from re import match
@@ -5,29 +8,47 @@ from urllib import unquote
 from clint.textui import progress
 from optparse import OptionParser
 import os
+from dcryptit import read_dlc
 
-option_parser = OptionParser(usage="Usage: %prog [options] [url1] [url2] ...")
+option_parser = OptionParser(usage="Usage: %prog [options] [url1] [url2] ...", version="%%prog v%s" % VERSION)
 option_parser.add_option('-f', '--file', action='store', dest='url_list_file',
-                         help='FILE containing a list of Zippyshare.com URLs separated by newlines', metavar='FILE')
+                         help='Path to FILE containing a list of Zippyshare.com URLs separated by newlines', metavar='FILE')
+option_parser.add_option('-d', '--dlc', action='store', dest='dlc_file',
+                         help='Path or URL to DLC FILE containing a list of Zippyshare.com URLs', metavar='DLC FILE')
 option_parser.add_option('-o', '--output', action='store', dest='output_dir', default='./',
                          help='DIRECTORY to save downloaded files to', metavar='/path/to/destination/')
 (options, args) = option_parser.parse_args()
 url_list_file = options.url_list_file
+dlc_file = options.dlc_file
 output_dir = options.output_dir
-if len(args) == 0:
-    try:
-        url_list_file = open(options.url_list_file, 'r')
-        url_list = url_list_file.read().strip().split('\n')
-        url_list_file.close()
-    except:
-        sys.exit('ERROR: Could not read URL list file: %s' % options.url_list_file)
-else:
-    if options.url_list_file:
-        sys.exit('ERROR: Please either specify URLs on the command-line, or use -f/--file, not both.')
-    url_list = args
 
-if options.output_dir[-1] != '/':
+if output_dir[-1] != '/':
     output_dir += '/'
+    print output_dir
+
+if len(args) == 0:
+    if dlc_file:
+        try:
+            if 'http://' or 'https://' in dlc_file:
+                url_list = read_dlc(url=dlc_file)
+            else:
+                url_list = read_dlc(path=dlc_file)
+        except:
+            sys.exit("ERROR: Could not read URLs from DLC file: %s" % (dlc_file))
+    elif url_list_file:
+        try:
+            url_list_file = open(url_list_file, 'r')
+            url_list = url_list_file.read().strip().split('\n')
+            url_list_file.close()
+        except:
+            sys.exit('ERROR: Could not read URL list file: %s' % (url_list_file))
+    else:
+        option_parser.print_help()
+        sys.exit()
+else:
+    if url_list_file or dlc_file:
+        sys.exit('ERROR: Please either specify URLs on the command-line, or use --file/--dlc, do not do both.')
+    url_list = args
 
 
 successes = 0
@@ -52,7 +73,9 @@ for url in url_list:
                 print '***** ERROR DOWNLOADING: %s\nFAILED TO PARSE DOWNLOAD URL FROM: %s' % (url, line)
                 failures += 1
                 break  # jump to next URL in the list
-            url_subfolder = page_parser[0]
+            if 'pd' in page_parser[0]:
+                print 'removing pd from url'
+            url_subfolder = page_parser[0].replace('pd', 'd')
             modulo_string = eval(page_parser[1])
             file_url = page_parser[2]
             filename = unquote(file_url).decode()
