@@ -1,14 +1,16 @@
 #!/usr/bin/python
-VERSION = '1.1'
+VERSION = '1.2'
 
-import requests
-import sys
-from re import match
-from urllib import unquote
 from clint.textui import progress
-from optparse import OptionParser
-import os
 from dcryptit import read_dlc
+from optparse import OptionParser
+from os import remove
+from os.path import isfile
+from re import match
+from requests import get
+from sys import exit
+from urllib import unquote
+
 
 option_parser = OptionParser(usage="Usage: %prog [options] [url1] [url2] ...", version="%%prog v%s" % VERSION)
 option_parser.add_option('-f', '--file', action='store', dest='url_list_file',
@@ -22,6 +24,7 @@ url_list_file = options.url_list_file
 dlc_file = options.dlc_file
 output_dir = options.output_dir
 
+# make sure that output path ends with a '/'
 if output_dir[-1] != '/':
     output_dir += '/'
 
@@ -33,29 +36,32 @@ if len(args) == 0:
             else:
                 url_list = read_dlc(path=dlc_file)
         except:
-            sys.exit("ERROR: Could not read URLs from DLC file: %s" % (dlc_file))
+            exit("ERROR: Could not read URLs from DLC file: %s" % (dlc_file))
     elif url_list_file:
         try:
             url_list_file = open(url_list_file, 'r')
             url_list = url_list_file.read().strip().split('\n')
             url_list_file.close()
         except:
-            sys.exit('ERROR: Could not read URL list file: %s' % (url_list_file))
+            exit('ERROR: Could not read URL list file: %s' % (url_list_file))
     else:
         option_parser.print_help()
-        sys.exit()
+        exit()
 else:
     if url_list_file or dlc_file:
-        sys.exit('ERROR: Please either specify URLs on the command-line, or use --file/--dlc, do not do both.')
+        exit('ERROR: Please either specify URLs on the command-line, or use --file/--dlc, do not do both.')
     url_list = args
 
 
+total_urls = len(url_list)
 successes = 0
 failures = 0
 skips = 0
+current_url_number = 0
 for url in url_list:
+    current_url_number += 1
     try:
-        landing_page = requests.get(url)
+        landing_page = get(url)
     except:
         print 'Skipping invalid URL: %s' % (repr(url))
         continue
@@ -72,13 +78,12 @@ for url in url_list:
                 print '***** ERROR DOWNLOADING: %s\nFAILED TO PARSE DOWNLOAD URL FROM: %s' % (url, line)
                 failures += 1
                 break  # jump to next URL in the list
-            if 'pd' in page_parser[0]:
-                print 'removing pd from url'
+            # TODO: download URLs sometimes have /pd/ instead of /d/, I am not sure why yet. This causes downloads to fail
             url_subfolder = page_parser[0].replace('pd', 'd')
             modulo_string = eval(page_parser[1])
             file_url = page_parser[2]
             filename = unquote(file_url).decode()
-            if os.path.isfile(output_dir+filename):
+            if isfile(output_dir+filename):
                 skips += 1
                 print 'File already exists, skipping: %s' % (filename)
                 break
@@ -86,9 +91,9 @@ for url in url_list:
             downloading = True
             attempt_number = 1
             while downloading:
-                print 'Downloading: %s (attempt #%i)' % (filename, attempt_number)
+                print 'Downloading (%i/%i): %s (attempt %i/3)' % (current_url_number, total_urls, filename, attempt_number)
                 try:
-                    file_download = requests.get(download_url, stream=True, cookies=cookies)
+                    file_download = get(download_url, stream=True, cookies=cookies)
                     path = '%s%s' % (output_dir, filename)
                     with open(path, 'wb') as f:
                         total_length = int(file_download.headers.get('content-length'))
@@ -107,7 +112,7 @@ for url in url_list:
                         print 'Failed landing page URL: %s' % (url)
                         print 'Failed download URL: %s' % (download_url)
                         try:
-                            os.remove(path)
+                            remove(path)
                         except:
                             pass
                         print 'Moving to next URL...'
