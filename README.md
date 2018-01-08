@@ -44,6 +44,8 @@ If any downloads failed and you want to try them again, simply re-run the same c
     $ 
 
 # Changelog
+## v1.2
+* Some small QoL changes, including making the output prettier.
 ## v1.1
 * Added support for DLC files
 * A couple other QOL additions for debugging and troubleshooting
