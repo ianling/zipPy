@@ -36,7 +36,11 @@ If any downloads failed and you want to try them again, simply re-run the same c
     http://www20.zippyshare.com/v/xxy3xxxx/file.html
     http://www20.zippyshare.com/v/xyyxxxxx/file.html
     $ python zipPy -f list.txt
-    
+    Downloading (1/5): Some.File.7z.001 (attempt 1/3)
+    [################################] 512000/512001 - 00:05:52
+    {...}
+    Summary: 5 successful, 0 failed, 0 skipped
+
 # Changelog
 ## v1.1
 * Added support for DLC files
