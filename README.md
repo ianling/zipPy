@@ -1,7 +1,7 @@
 # zipPy
 Zippyshare download script, written in Python.
 
-Takes a list of Zippyshare.com URLs, either from a file or on the command line, and downloads them to the specified output directory (default: ./).
+Downloads a list of Zippyshare.com URLs. You can provide the URLs on the command line, from a plain text file (URLs separated by linebreaks), or from a DLC file.
 
 At the end, it will list how many links were downloaded successfully, how many were skipped, and how many failed to download.
 
@@ -18,12 +18,16 @@ If any downloads failed and you want to try them again, simply re-run the same c
     Usage: zipPy.py [options] [url1] [url2] ...
     
     Options:
+      --version             show program's version number and exit
       -h, --help            show this help message and exit
-      -f FILE, --file=FILE  FILE containing a list of Zippyshare.com URLs
+      -f FILE, --file=FILE  Path to FILE containing a list of Zippyshare.com URLs
                             separated by newlines
+      -d DLC FILE, --dlc=DLC FILE
+                            Path or URL to DLC FILE containing a list of
+                            Zippyshare.com URLs
       -o /path/to/destination/, --output=/path/to/destination/
                             DIRECTORY to save downloaded files to
-                            
+
 # Example
     $ cat list.txt
     http://www20.zippyshare.com/v/xxxxxxxx/file.html
@@ -32,3 +36,10 @@ If any downloads failed and you want to try them again, simply re-run the same c
     http://www20.zippyshare.com/v/xxy3xxxx/file.html
     http://www20.zippyshare.com/v/xyyxxxxx/file.html
     $ python zipPy -f list.txt
+    
+# Changelog
+## v1.1
+* Added support for DLC files
+* A couple other QOL additions for debugging and troubleshooting
+## v1.0
+* Initial release
