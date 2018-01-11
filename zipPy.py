@@ -1,5 +1,5 @@
 #!/usr/bin/python
-VERSION = '1.2'
+VERSION = '1.3'
 
 from clint.textui import progress
 from dcryptit import read_dlc
