@@ -44,6 +44,8 @@ If any downloads failed and you want to try them again, simply re-run the same c
     $ 
 
 # Changelog
+## v1.3
+* A small bug fix where I misremembered how a Python feature worked. The bug was related to reading DLC files.
 ## v1.2
 * Some small QoL changes, including making the output prettier.
 ## v1.1
