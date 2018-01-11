@@ -31,7 +31,7 @@ if output_dir[-1] != '/':
 if len(args) == 0:
     if dlc_file:
         try:
-            if 'http://' or 'https://' in dlc_file:
+            if 'http://' in dlc_file or 'https://' in dlc_file:
                 url_list = read_dlc(url=dlc_file)
             else:
                 url_list = read_dlc(path=dlc_file)
