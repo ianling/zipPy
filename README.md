@@ -44,6 +44,10 @@ If any downloads failed and you want to try them again, simply re-run the same c
     $ 
 
 # Changelog
+## v1.4
+* Changed download flow, so re-attempting downloads actually works now
+* Added a little bit more error handling
+* If the file already exists, check if the size is 0 bytes. If it is, overwrite it.
 ## v1.3
 * A small bug fix where I misremembered how a Python feature worked. The bug was related to reading DLC files.
 ## v1.2
