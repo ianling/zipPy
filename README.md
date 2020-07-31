@@ -8,13 +8,17 @@ At the end, it will list how many links were downloaded successfully, how many w
 If any downloads failed and you want to try them again, simply re-run the same command. zipPy will automatically detect if a file was already downloaded (based on file name) and skip it, so you will not end up with duplicate files.
 
 # Requirements
-* Python 2
+* Python 3.6 (or above)
   * clint
   * requests
-  * dcryptit (https://github.com/ianling/dcryptit-python)
+  * dcryptit>=2.0 (https://github.com/ianling/dcryptit-python)
+
+Install dependencies automatically with pip:
+
+    pip3 install -r requirements.txt
 
 # Usage
-    $ python zipPy.py -h
+    $ python3 zipPy.py -h
     Usage: zipPy.py [options] [url1] [url2] ...
     
     Options:
@@ -35,7 +39,7 @@ If any downloads failed and you want to try them again, simply re-run the same c
     http://www20.zippyshare.com/v/xxxyyxxx/file.html
     http://www20.zippyshare.com/v/xxy3xxxx/file.html
     http://www20.zippyshare.com/v/xyyxxxxx/file.html
-    $ python zipPy -f list.txt
+    $ python3 zipPy.py -f list.txt
     Downloading (1/5): Some.File.7z.001 (attempt 1/3)
     [################################] 512000/512001 - 00:05:52
     Downloading (2/5): {...}
@@ -44,6 +48,9 @@ If any downloads failed and you want to try them again, simply re-run the same c
     $ 
 
 # Changelog
+## v2.0
+* Python3 support
+* General code clean-up
 ## v1.4
 * Changed download flow, so re-attempting downloads actually works now
 * Added a little bit more error handling
@@ -57,3 +64,4 @@ If any downloads failed and you want to try them again, simply re-run the same c
 * A couple other QOL additions for debugging and troubleshooting
 ## v1.0
 * Initial release
+
