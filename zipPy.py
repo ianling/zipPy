@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-VERSION = '2.1'
+VERSION = '2.2'
 
 from tqdm import tqdm
+from clint.textui import progress
 from dcryptit import read_dlc
 from optparse import OptionParser
 from os import remove
@@ -105,7 +106,10 @@ for url in url_list:
                         file_download = get(download_url, stream=True, cookies=cookies)
                         with open(path, 'wb') as f:
                             total_length = int(file_download.headers.get('content-length'))
-                            for chunk in tqdm(file_download.iter_content(chunk_size=1024), total=total_length/1024, unit="KB", desc=filename, leave=True):
+                            downdone = 0
+                            chunkSize = 1024
+                            num_bars = int(total_length / chunkSize)
+                            for chunk in tqdm(file_download.iter_content(chunk_size=chunkSize), total=num_bars, unit="KB", desc=filename, leave=True):
                                 if chunk:
                                     f.write(chunk)
                                     f.flush()
@@ -126,6 +130,5 @@ for url in url_list:
         print('Moving to next URL...')
     if skipped:
         skips += 1
-
 
 print(f'\nSummary: {successes} successful, {failures} failed, {skips} skipped')
