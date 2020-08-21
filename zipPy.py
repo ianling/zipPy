@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-VERSION = '2.0'
+VERSION = '2.1'
 
 from clint.textui import progress
 from dcryptit import read_dlc
@@ -10,7 +10,6 @@ from re import match
 from requests import get
 from sys import exit
 from urllib.parse import unquote
-
 
 option_parser = OptionParser(usage="Usage: %prog [options] [url1] [url2] ...", version=f"%%prog v{VERSION}")
 option_parser.add_option('-f', '--file', action='store', dest='url_list_file',
@@ -79,26 +78,28 @@ for url in url_list:
                 break
             if "document.getElementById('dlbutton').href" in line:
                 try:
-                    page_parser = match('\s*document\.getElementById\(\'dlbutton\'\)\.href = "/([p]?d)/\w+/" \+ \((.*?)\) \+ "/(.*)";', line).groups()
+                    page_parser = match('\s*document\.getElementById\(\'dlbutton\'\)\.href = "/([p]?d)/\w+/"\+\((.*?)\)\+"/(.*)";', line).groups()
                 except:
                     print(f"***** ERROR DOWNLOADING: {url})")
                     print(f"FAILED TO PARSE DOWNLOAD URL FROM: {line}")
                     break
                 # TODO: download URLs sometimes have /pd/ instead of /d/, I am not sure why yet. This causes downloads to fail
                 url_subfolder = page_parser[0].replace('pd', 'd')
-                modulo_string = eval(page_parser[1])
+                equation = match('.{3}(.*\%\d*).*', page_parser[1]).groups()
+                modulo_string = eval(equation[0])+11 #the magic number
                 file_url = page_parser[2]
                 filename = unquote(file_url)
                 path = output_dir + filename
                 if isfile(path):
-                    if getsize(path) == 0:
-                        print('File already exists, but size is 0 bytes. Deleting empty file and continuing download...')
-                        remove(path)
-                    else:
-                        print(f'File already exists, skipping: {filename}')
-                        skipped = True
-                        break
+                        if getsize(path) == 0:
+                                print('File already exists, but size is 0 bytes. Deleting empty file and continuing download...')
+                                remove(path)
+                        else:
+                                print(f'File already exists, skipping: {filename}')
+                                skipped = True
+                                break
                 download_url = f'https://{subdomain}.zippyshare.com/{url_subfolder}/{file_id}/{modulo_string}/{file_url}'
+                print(download_url)
                 while not finished_download:
                     print(f'Downloading ({current_url_number}/{total_urls}): {filename} (attempt {attempts}/{max_attempts})')
                     try:
