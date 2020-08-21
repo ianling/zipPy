@@ -13,8 +13,8 @@ Install dependencies automatically with pip:
     pip3 install -r requirements.txt
 
 # Usage
-    $ python3 zipPy.py -h
-    Usage: zipPy.py [options] [url1] [url2] ...
+    $ python3 zippyleech.py -h
+    Usage: zippyleech.py [options] [url1] [url2] ...
     
     Options:
       --version             show program's version number and exit
