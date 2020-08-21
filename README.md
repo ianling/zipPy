@@ -9,7 +9,7 @@ If any downloads failed and you want to try them again, simply re-run the same c
 
 # Requirements
 * Python 3.6 (or above)
-  * clint
+  * tqdm
   * requests
   * dcryptit>=2.0 (https://github.com/ianling/dcryptit-python)
 
@@ -33,35 +33,18 @@ Install dependencies automatically with pip:
                             DIRECTORY to save downloaded files to
 
 # Example
-    $ cat list.txt
-    http://www20.zippyshare.com/v/xxxxxxxx/file.html
-    http://www20.zippyshare.com/v/xxxyyyyx/file.html
-    http://www20.zippyshare.com/v/xxxyyxxx/file.html
-    http://www20.zippyshare.com/v/xxy3xxxx/file.html
-    http://www20.zippyshare.com/v/xyyxxxxx/file.html
     $ python3 zipPy.py -f list.txt
-    Downloading (1/5): Some.File.7z.001 (attempt 1/3)
-    [################################] 512000/512001 - 00:05:52
-    Downloading (2/5): {...}
-    
-    Summary: 5 successful, 0 failed, 0 skipped
-    $ 
+    Downloading (1/2): Oblivion Song 026 (2020) (Digital) (Zone-Empire).cbr (attempt 3/3)
+    Song (2020) (Digital) (HDR).mkv: 42043KB [00:06, 6457.44KB/s]  
+    Downloading (2/2): []
+
+    Summary: 2 successful, 0 failed, 0 skipped
 
 # Changelog
-## v2.0
-* Python3 support
-* General code clean-up
-## v1.4
-* Changed download flow, so re-attempting downloads actually works now
-* Added a little bit more error handling
-* If the file already exists, check if the size is 0 bytes. If it is, overwrite it.
-## v1.3
-* A small bug fix where I misremembered how a Python feature worked. The bug was related to reading DLC files.
-## v1.2
-* Some small QoL changes, including making the output prettier.
-## v1.1
-* Added support for DLC files
-* A couple other QOL additions for debugging and troubleshooting
+## v2.2
+* Ditch clint for tqdm progress bar
+## v2.1
+* Fix modulous calculation
 ## v1.0
 * Initial release
 
