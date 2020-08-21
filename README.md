@@ -1,11 +1,6 @@
-# zipPy
-Zippyshare download script, written in Python.
-
-Downloads a list of Zippyshare.com URLs. You can provide the URLs on the command line, from a plain text file (URLs separated by linebreaks), or from a DLC file.
-
+# ZippyLeech
+Python script to download a list of Zippyshare.com URLs. You can provide the URLs on the command line, from a plain text file (URLs separated by linebreaks), or from a DLC file.
 At the end, it will list how many links were downloaded successfully, how many were skipped, and how many failed to download.
-
-If any downloads failed and you want to try them again, simply re-run the same command. zipPy will automatically detect if a file was already downloaded (based on file name) and skip it, so you will not end up with duplicate files.
 
 # Requirements
 * Python 3.6 (or above)
