@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 VERSION = '2.1'
 
-from clint.textui import progress
+from tqdm import tqdm
 from dcryptit import read_dlc
 from optparse import OptionParser
 from os import remove
@@ -99,14 +99,13 @@ for url in url_list:
                                 skipped = True
                                 break
                 download_url = f'https://{subdomain}.zippyshare.com/{url_subfolder}/{file_id}/{modulo_string}/{file_url}'
-                print(download_url)
                 while not finished_download:
                     print(f'Downloading ({current_url_number}/{total_urls}): {filename} (attempt {attempts}/{max_attempts})')
                     try:
                         file_download = get(download_url, stream=True, cookies=cookies)
                         with open(path, 'wb') as f:
                             total_length = int(file_download.headers.get('content-length'))
-                            for chunk in progress.bar(file_download.iter_content(chunk_size=1024), expected_size=(total_length/1024) + 1):
+                            for chunk in tqdm(file_download.iter_content(chunk_size=1024), total=total_length/1024, unit="KB", desc=filename, leave=True):
                                 if chunk:
                                     f.write(chunk)
                                     f.flush()
